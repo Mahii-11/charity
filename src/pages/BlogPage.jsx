@@ -125,7 +125,7 @@ export default function BlogPage() {
           </motion.div>
         </div>
       </section>
-        <div className="max-w-9xl mx-auto px-5 sm:px-8 lg:px-10 py-16">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 py-16">
 
       <Reveal className="mb-10">
           <div className="flex items-center gap-3 mb-10">
@@ -153,7 +153,7 @@ export default function BlogPage() {
             initial="hidden"
             animate="show"
             exit={{ opacity: 0, y: -10, transition: { duration: 0.2 } }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
           >
             {filteredPosts.length > 0 ? (
               filteredPosts.map((post) => (
@@ -192,7 +192,7 @@ export default function BlogPage() {
          <section className="bg-white border-t border-slate-100 py-20">
         <div className="max-w-3xl mx-auto px-5 sm:px-8 text-center">
           <Reveal>
-            <p className="text-label-sm text-emerald-600 mb-3">Make Your Own Impact</p>
+            <p className="text-label-sm text-emerald-600 mb-3  ">Make Your Own Impact</p>
             <h2 className="font-display text-display-lg font-extrabold text-slate-900 text-balance mb-5">
               Every Story Here Started With One Donor
             </h2>

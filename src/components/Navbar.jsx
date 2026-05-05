@@ -130,19 +130,37 @@ const handleScroll = (id) => {
             className="md:hidden overflow-hidden border-t border-slate-100 bg-white"
           >
             <div className="px-5 pb-5 pt-2 flex flex-col gap-1">
-              {NAV_LINKS.map((link, i) => (
-                <motion.a
-                  key={link}
-                  href={`#${link.toLowerCase()}`}
-                  onClick={() => setMenuOpen(false)}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.06 }}
-                  className="px-4 py-3 text-body-sm font-medium text-slate-700 hover:text-emerald-700 hover:bg-emerald-50 rounded-xl transition-colors"
-                >
-                  {link}
-                </motion.a>
-              ))}
+               {NAV_LINKS.map((link, i) => {
+              const isRoute = link === "Blogs";
+
+               return isRoute ? (
+                <Link
+                 key={link}
+                 to="/blogs"
+                 initial={{ opacity: 0, y: -10 }}
+                 animate={{ opacity: 1, y: 0 }}
+                 transition={{ delay: 0.1 + i * 0.07, duration: 0.4 }}
+                 className="relative px-4 py-2 text-body-xs font-medium font-body text-slate-600 hover:text-emerald-700 rounded-lg transition-colors duration-200 group tracking-wide"
+                  >
+                 {link}
+                  <span className="absolute bottom-1.5 left-4 right-4 h-px bg-emerald-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left rounded-full" />
+                </Link>
+                 ) : (
+                     <a
+                      key={link}
+                      href={`#${link.toLowerCase()}`}
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.1 + i * 0.07, duration: 0.4 }}
+                      onClick={() => handleScroll(link.toLowerCase())}
+                      className="relative px-4 py-2 text-body-xs font-medium font-body text-slate-600 hover:text-emerald-700 rounded-lg transition-colors duration-200 group tracking-wide"
+                      >
+                      {link}
+                    <span className="absolute bottom-1.5 left-4 right-4 h-px bg-emerald-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left rounded-full" />
+                     </a>
+                     );
+                  })}
+                
               <motion.a
                 href="#donate"
                 onClick={() => setMenuOpen(false)}
