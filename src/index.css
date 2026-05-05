@@ -1,0 +1,168 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --font-display: var(--app-font-display);
+  --font-sans: var(--app-font-sans);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  --background: 0 0% 100%;
+  --foreground: 220 20% 12%;
+  --border: 220 14% 90%;
+  --input: 220 14% 90%;
+  --ring: 152 69% 31%;
+  --card: 0 0% 100%;
+  --card-foreground: 220 20% 12%;
+  --primary: 152 69% 31%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 220 14% 96%;
+  --secondary-foreground: 220 20% 12%;
+  --muted: 220 14% 96%;
+  --muted-foreground: 220 10% 52%;
+  --accent: 38 92% 50%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 84% 60%;
+  --app-font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --app-font-sans: 'Inter', system-ui, sans-serif;
+  --radius: 0.75rem;
+
+  /* ── Type scale ──────────────────────────────────────────────── */
+  /* Display: hero headings */
+  --text-display-2xl: clamp(3rem, 6vw + 1rem, 5rem);      /* ~80px max */
+  --text-display-xl:  clamp(2.5rem, 4.5vw + 0.75rem, 4rem); /* ~64px max */
+  --text-display-lg:  clamp(2rem, 3.5vw + 0.5rem, 3rem);   /* ~48px max */
+  --text-display-md:  clamp(1.5rem, 2.5vw + 0.25rem, 2.25rem); /* ~36px max */
+
+  /* Body: prose & UI */
+  --text-body-xl:  1.25rem;   /* 20px */
+  --text-body-lg:  1.125rem;  /* 18px */
+  --text-body-md:  1rem;      /* 16px */
+  --text-body-sm:  0.9375rem; /* 15px */
+  --text-body-xs:  0.875rem;  /* 14px */
+
+  /* Labels & caps */
+  --text-label-lg: 0.8125rem; /* 13px */
+  --text-label-sm: 0.75rem;   /* 12px */
+
+  /* Line heights */
+  --leading-display: 1.08;
+  --leading-heading: 1.2;
+  --leading-body: 1.7;
+  --leading-ui: 1.4;
+
+  /* Letter spacing */
+  --tracking-tight: -0.03em;
+  --tracking-snug:  -0.015em;
+  --tracking-caps:   0.1em;
+}
+
+@layer base {
+  * {
+    @apply border-border box-border;
+  }
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    font-family: var(--app-font-sans);
+    font-size: var(--text-body-md);
+    line-height: var(--leading-body);
+    color: hsl(var(--foreground));
+    background: hsl(var(--background));
+  }
+
+  /* ── Display headings use the display font ── */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--app-font-display);
+    line-height: var(--leading-heading);
+    letter-spacing: var(--tracking-snug);
+    font-weight: 800;
+  }
+
+  /* ── Smooth paragraph measure ── */
+  p {
+    max-width: 68ch;
+    line-height: var(--leading-body);
+  }
+}
+
+/* ── Utility classes for type scale ──────────────────────────── */
+@layer utilities {
+  .font-display { font-family: var(--app-font-display); }
+  .font-body    { font-family: var(--app-font-sans); }
+
+  /* Responsive display sizes */
+  .text-display-2xl {
+    font-size: var(--text-display-2xl);
+    line-height: var(--leading-display);
+    letter-spacing: var(--tracking-tight);
+  }
+  .text-display-xl {
+    font-size: var(--text-display-xl);
+    line-height: var(--leading-display);
+    letter-spacing: var(--tracking-tight);
+  }
+  .text-display-lg {
+    font-size: var(--text-display-lg);
+    line-height: var(--leading-heading);
+    letter-spacing: var(--tracking-snug);
+  }
+  .text-display-md {
+    font-size: var(--text-display-md);
+    line-height: var(--leading-heading);
+    letter-spacing: var(--tracking-snug);
+  }
+
+  /* Body sizes */
+  .text-body-xl { font-size: var(--text-body-xl); line-height: var(--leading-body); }
+  .text-body-lg { font-size: var(--text-body-lg); line-height: var(--leading-body); }
+  .text-body-md { font-size: var(--text-body-md); line-height: var(--leading-body); }
+  .text-body-sm { font-size: var(--text-body-sm); line-height: var(--leading-body); }
+  .text-body-xs { font-size: var(--text-body-xs); line-height: var(--leading-ui); }
+
+  /* Label & caps */
+  .text-label-lg {
+    font-size: var(--text-label-lg);
+    letter-spacing: var(--tracking-caps);
+    font-weight: 600;
+    text-transform: uppercase;
+    line-height: var(--leading-ui);
+  }
+  .text-label-sm {
+    font-size: var(--text-label-sm);
+    letter-spacing: var(--tracking-caps);
+    font-weight: 600;
+    text-transform: uppercase;
+    line-height: var(--leading-ui);
+  }
+
+  /* Balanced text */
+  .text-balance { text-wrap: balance; }
+  .text-pretty  { text-wrap: pretty; }
+}
