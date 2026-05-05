@@ -1,21 +1,38 @@
-import { Causes } from "./components/Causes";
-import { DonationSection } from "./components/DonationSection";
-import { Hero } from "./components/Hero";
-import { ImpactStats } from "./components/ImpactStats";
-import { Navbar } from "./components/Navbar";
+import AppLayout from "./layout/AppLayout";
+import Home from "./pages/Home";
+import BlogPage from "./pages/BlogPage";
+import { createBrowserRouter, RouterProvider } from "react-router";
+
+
+
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <AppLayout />,
+    children: [
+
+      {
+        path: "/",
+        element: <Home />
+      },
+
+
+      {
+        path: "/blogs",
+        element: <BlogPage />
+      }
+
+    ]
+  }
+
+
+])
+
+
+
+
 
 export default function App() {
-  return (
-    <div className="min-h-screen font-body text-slate-800 bg-white overflow-x-hidden">
-      <Navbar />
-      <main>
-        <Hero/>
-        <ImpactStats />
-        <DonationSection />
-        <Causes />
-       
-      </main>
-
-    </div>
-  )
+  return <RouterProvider router={router} />
 }

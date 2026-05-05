@@ -1,9 +1,21 @@
 import { useState } from "react";
+import { Link, useNavigate } from "react-router";
 import { motion, AnimatePresence, easeOut } from "framer-motion";
-import { NAV_LINKS } from "../data/data";
+
+
+const NAV_LINKS = ["Home", "About", "Causes", "Donate", "Blogs", "Contact"];
 
 export function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const navigate = useNavigate();
+
+const handleScroll = (id) => {
+  navigate("/");
+  setTimeout(() => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  }, 100);
+};
+  
 
   return (
     <motion.header
@@ -32,20 +44,37 @@ export function Navbar() {
 
           {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-0.5">
-            {NAV_LINKS.map((link, i) => (
-              <motion.a
-                key={link}
-                href={`#${link.toLowerCase()}`}
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 + i * 0.07, duration: 0.4 }}
-                className="relative px-4 py-2 text-body-xs font-medium font-body text-slate-600 hover:text-emerald-700 rounded-lg transition-colors duration-200 group tracking-wide"
-              >
-                {link}
-                <span className="absolute bottom-1.5 left-4 right-4 h-px bg-emerald-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left rounded-full" />
-              </motion.a>
-            ))}
-          </nav>
+            {NAV_LINKS.map((link, i) => {
+              const isRoute = link === "Blogs";
+
+               return isRoute ? (
+                <Link
+                 key={link}
+                 to="/blogs"
+                 initial={{ opacity: 0, y: -10 }}
+                 animate={{ opacity: 1, y: 0 }}
+                 transition={{ delay: 0.1 + i * 0.07, duration: 0.4 }}
+                 className="relative px-4 py-2 text-body-xs font-medium font-body text-slate-600 hover:text-emerald-700 rounded-lg transition-colors duration-200 group tracking-wide"
+                  >
+                 {link}
+                  <span className="absolute bottom-1.5 left-4 right-4 h-px bg-emerald-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left rounded-full" />
+                </Link>
+                 ) : (
+                     <a
+                      key={link}
+                      href={`#${link.toLowerCase()}`}
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.1 + i * 0.07, duration: 0.4 }}
+                      onClick={() => handleScroll(link.toLowerCase())}
+                      className="relative px-4 py-2 text-body-xs font-medium font-body text-slate-600 hover:text-emerald-700 rounded-lg transition-colors duration-200 group tracking-wide"
+                      >
+                      {link}
+                    <span className="absolute bottom-1.5 left-4 right-4 h-px bg-emerald-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left rounded-full" />
+                     </a>
+                     );
+                  })}
+                </nav>
 
           <div className="flex items-center gap-3">
             {/* Desktop CTA */}
