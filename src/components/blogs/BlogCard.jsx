@@ -14,16 +14,15 @@ export function BlogCard({ post }) {
     >
       
       <div
-        className={`relative h-52 bg-linear-to-br ${post.gradient} flex items-center justify-center overflow-hidden shrink-0`}
+        className={`relative h-52 bg-linear-to-br ${post.gradient} overflow-hidden rounded-xl`}
       >
-          <img src={post.image} alt={post.category} className="w-full h-auto" />
-        <motion.span
-          className="text-5xl opacity-30 select-none"
-          animate={{ scale: [1, 1.08, 1] }}
-          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-        >
-        
-        </motion.span>
+        <img src={post.image} alt={post.category} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+       
+          <motion.div
+            className="absolute inset-0"
+             animate={{ scale: [1, 1.05, 1] }}
+              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+           />
 
         {/* Category badge */}
         <span

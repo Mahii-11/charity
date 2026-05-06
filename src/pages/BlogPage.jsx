@@ -55,7 +55,7 @@ export default function BlogPage() {
   return (
         <div className="min-h-screen bg-slate-50">
 
-        <section className="relative bg-slate-900 pt-28 pb-20 overflow-hidden">
+        <section className="relative bg-slate-900 pt-38 pb-20 overflow-hidden">
         {/* Animated background */}
         <div className="absolute inset-0 pointer-events-none">
           <motion.div
@@ -189,42 +189,56 @@ export default function BlogPage() {
         )}
         </div>
 
-         <section className="bg-white border-t border-slate-100 py-20">
-        <div className="max-w-3xl mx-auto px-5 sm:px-8 text-center">
-          <Reveal>
-            <p className="text-label-sm text-emerald-600 mb-3  ">Make Your Own Impact</p>
-            <h2 className="font-display text-display-lg font-extrabold text-slate-900 text-balance mb-5">
-              Every Story Here Started With One Donor
-            </h2>
-            <p className="text-body-lg text-slate-500 text-pretty mb-10 mx-auto" style={{ maxWidth: "50ch" }}>
-              The stories you've just read weren't inevitable — they happened because someone chose to
-              give. Be the beginning of the next one.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <motion.a
-                href="/#donate"
-                whileHover={{ scale: 1.06, boxShadow: "0 16px 36px rgba(5,150,105,0.28)" }}
-                whileTap={{ scale: 0.96 }}
-                className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-emerald-600 text-white font-display font-bold text-body-md shadow-lg hover:bg-emerald-700 transition-colors"
-              >
-                Donate Now
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-              </motion.a>
-              <motion.a
-                href="/#causes"
-                whileHover={{ scale: 1.04 }}
-                whileTap={{ scale: 0.96 }}
-                className="inline-flex items-center justify-center px-8 py-4 rounded-full border-2 border-slate-200 text-slate-700 font-display font-semibold text-body-md hover:border-emerald-400 hover:text-emerald-700 transition-all"
-              >
-                Browse Causes
-              </motion.a>
-            </div>
-          </Reveal>
-        </div>
-      </section>
+         <section className="relative bg-white border-t border-slate-100 py-20 sm:py-24 overflow-hidden">
+  {/* subtle background glow */}
+  
 
+  <div className="relative max-w-3xl mx-auto px-5 sm:px-8 text-center">
+    <Reveal>
+      {/* small label */}
+      <div className="flex justify-center">
+         <p className="text-xs sm:text-sm tracking-widest uppercase text-emerald-600 mb-3">
+        Make Your Own Impact
+      </p>
+
+      </div>
+      {/* heading */}
+      <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 leading-tight mb-5">
+        Every Story Here Started With One Donor
+      </h2>
+
+      {/* description */}
+      <p className="text-base sm:text-lg text-slate-500 mb-10 mx-auto max-w-[52ch] leading-relaxed">
+        The stories you've just read weren’t inevitable — they happened because someone chose to give.
+        Be the beginning of the next one.
+      </p>
+
+      {/* buttons */}
+      <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+        <motion.a
+          href="/#donate"
+          whileHover={{ scale: 1.06, boxShadow: "0 18px 40px rgba(5,150,105,0.30)" }}
+          whileTap={{ scale: 0.96 }}
+          className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-emerald-600 text-white font-semibold text-base shadow-lg hover:bg-emerald-700 transition-all"
+        >
+          Donate Now
+          <svg className="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          </svg>
+        </motion.a>
+
+        <motion.a
+          href="/#causes"
+          whileHover={{ scale: 1.04 }}
+          whileTap={{ scale: 0.96 }}
+          className="inline-flex items-center justify-center px-8 py-4 rounded-full border border-slate-300 text-slate-700 font-semibold text-base hover:border-emerald-500 hover:text-emerald-700 transition-all"
+        >
+          Browse Causes
+        </motion.a>
+      </div>
+    </Reveal>
+  </div>
+</section>
       </div>
 
       
