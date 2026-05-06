@@ -1,11 +1,3 @@
-import {
-  FaTint,
-  FaBookOpen,
-  FaUtensils,
-  FaHospital,
-  FaHome,
-  FaHandHoldingHeart,
-} from "react-icons/fa";
 
 
 
@@ -21,7 +13,7 @@ export const CAUSES = [
     raised: 48200,
     goal: 75000,
     tag: "Water & Sanitation",
-    icon: FaTint,
+    image: "https://images.pexels.com/photos/34935520/pexels-photo-34935520.jpeg",
   },
   {
     title: "Education First",
@@ -29,7 +21,7 @@ export const CAUSES = [
     raised: 61500,
     goal: 90000,
     tag: "Education",
-    icon: FaBookOpen,
+    image: "https://images.pexels.com/photos/36830379/pexels-photo-36830379.jpeg",
   },
   {
     title: "Hunger Relief Program",
@@ -37,7 +29,7 @@ export const CAUSES = [
     raised: 33800,
     goal: 60000,
     tag: "Food & Nutrition",
-    icon: FaUtensils,
+    image: "https://images.unsplash.com/photo-1600891964599-f61ba0e24092",
   },
   {
     title: "Medical Aid Mission",
@@ -45,7 +37,7 @@ export const CAUSES = [
     raised: 27000,
     goal: 50000,
     tag: "Healthcare",
-    icon: FaHospital,
+    image: "https://images.unsplash.com/photo-1584515933487-779824d29309",
   },
   {
     title: "Shelter & Hope",
@@ -53,7 +45,7 @@ export const CAUSES = [
     raised: 55600,
     goal: 80000,
     tag: "Housing",
-    icon: FaHome,
+    image: "https://images.unsplash.com/photo-1509099836639-18ba1795216d",
   },
   {
     title: "Empower Women",
@@ -61,7 +53,7 @@ export const CAUSES = [
     raised: 19400,
     goal: 40000,
     tag: "Empowerment",
-    icon: FaHandHoldingHeart,
+    image: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e",
   },
 ];
 

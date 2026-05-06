@@ -32,7 +32,7 @@ export function Causes() {
         <StaggerReveal delay={0.1} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {CAUSES.map((cause) => {
             const progress = progressPct(cause.raised, cause.goal);
-              const Icon = cause.icon;
+             // const Icon = cause.icon;
             return (
               <motion.div
                 key={cause.title}
@@ -44,13 +44,13 @@ export function Causes() {
                 {/* Image placeholder */}
                 <div className="h-48 bg-linear-to-br from-emerald-50 to-teal-100 flex items-center justify-center relative overflow-hidden">
                   <motion.div className="absolute inset-0 bg-linear-to-br from-emerald-500/10 to-teal-600/20 group-hover:opacity-80 transition-opacity duration-300" />
-                  <motion.span
-                    className="text-5xl z-10 relative select-none"
-                    animate={{ rotate: [0, -5, 5, 0] }}
-                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                  >
-                      <Icon /> 
-                  </motion.span>
+                   <img src={cause.image} alt={cause.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+       
+                 <motion.div
+                 className="absolute inset-0"
+                 animate={{ scale: [1, 1.05, 1] }}
+                 transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                  />
                   <span className="absolute top-3 left-3 px-3 py-1 bg-white/90 text-emerald-700 text-label-sm rounded-full font-semibold normal-case tracking-normal">
                     {cause.tag}
                   </span>
