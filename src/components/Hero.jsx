@@ -154,21 +154,13 @@ export function Hero() {
               }}
               transition={{ duration: 3, repeat: Infinity }}
             >
-              <motion.svg
-                className="w-20 h-20 text-emerald-300/40"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                animate={{ scale: [1, 1.08, 1] }}
-                transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1}
-                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                />
-              </motion.svg>
+          <img src="/images/hero.png" alt= "image" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+       
+          <motion.div
+            className="absolute inset-0"
+             animate={{ scale: [1, 1.05, 1] }}
+              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+           />
             </motion.div>
 
             <div className="space-y-3">
