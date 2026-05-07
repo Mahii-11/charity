@@ -6,7 +6,7 @@ import { Causes } from "../components/Causes";
 import { StorySection } from "../components/StorySection";
 import { Transparency } from "../components/Transparency";
 import { CallToAction } from "../components/CallToAction";
-
+import  DonationImpactStoriesSliderSection  from "../components/DonationImpactStoriesSliderSection";
 
 
 export default function Home() {
@@ -17,6 +17,7 @@ export default function Home() {
       <DonationSection />
       <Causes />
       <StorySection />
+      <DonationImpactStoriesSliderSection />
       <Transparency />
       <CallToAction />
     </main>
