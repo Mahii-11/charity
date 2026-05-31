@@ -1,47 +1,5 @@
-const BLOG_POSTS = [
-  {
-    id: 1,
-    slug: "clean-water-changes-everything",
-    category: "Water",
-    title: "How Clean Water Is Rewriting the Future of Rural Bangladesh",
-    excerpt:
-      "When a single borehole was installed in Char Kukri-Mukri, 400 families stopped losing children to waterborne disease overnight.",
-    image: "/images/water.png",
-    gradient: "from-teal-500 to-emerald-600",
-    accentColor: "text-teal-600 bg-teal-50 border-teal-200",
-    location: "Char Kukri-Mukri",
-    livesImpacted: "400+ Families",
-    raised: "৳12L Raised",
-  },
-  {
-    id: 2,
-    slug: "education-first-girls-school",
-    category: "Education",
-    title: "Girls Who Were Invisible Now Lead Their Classrooms",
-    excerpt:
-      "Scholarship programs helped 1,200 girls stay enrolled through secondary school in remote districts.",
-    image: "/images/education.png",
-    gradient: "from-blue-500 to-indigo-600",
-    accentColor: "text-blue-600 bg-blue-50 border-blue-200",
-    location: "Kurigram",
-    livesImpacted: "1,200 Students",
-    raised: "৳8.4L Raised",
-  },
-  {
-    id: 3,
-    slug: "Healthcare",
-    category: "Healthcare",
-    title: "Mobile Clinics Reached 12,000 Patients Without Access to Doctors",
-    excerpt:
-      "Medical vans delivered healthcare support across isolated chars and haors.",
-    image: "/images/healty.png",
-    gradient: "from-rose-500 to-pink-600",
-    accentColor: "text-rose-600 bg-rose-50 border-rose-200",
-    location: "Sunamগঞ্জ",
-    livesImpacted: "12,000+ Patients",
-    raised: "৳15L Raised",
-  },
-];
+import { Link } from "react-router";
+import { IMPACT_STORIES } from "../data/impactStories";
 
 function ImpactCard({ post }) {
   return (
@@ -192,8 +150,8 @@ function ImpactCard({ post }) {
 
         {/* button */}
         <div className="mt-5 flex items-center justify-between">
-          <a
-            href={`/impact-stories/${post.slug}`}
+          <Link
+            to={`/impact-stories/${post.slug}`}
             className={[
               "inline-flex items-center gap-2 rounded-xl border border-emerald-100",
               "bg-white/70 px-3.5 py-2 text-sm font-semibold text-emerald-800",
@@ -211,7 +169,7 @@ function ImpactCard({ post }) {
                 →
               </span>
             </span>
-          </a>
+          </Link>
 
           <div className="hidden items-center gap-2 rounded-xl border border-emerald-100 bg-white/60 px-3 py-2 sm:flex">
             <span className="h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_0_4px_rgba(16,185,129,0.18)]" />
@@ -240,7 +198,7 @@ function ImpactCard({ post }) {
 }
 
 export default function DonationImpactStoriesSliderSection() {
-  const items = BLOG_POSTS;
+  const items = IMPACT_STORIES;
 
   return (
     <section className="relative bg-white">

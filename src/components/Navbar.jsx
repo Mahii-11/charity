@@ -4,6 +4,11 @@ import { motion, AnimatePresence, easeOut } from "framer-motion";
 
 
 const NAV_LINKS = ["Home", "About", "Causes", "Donate", "Blogs", "Contact"];
+const ROUTE_LINKS = {
+  About: "/about",
+  Blogs: "/blogs",
+  Contact: "/contact",
+};
 
 export function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -45,12 +50,14 @@ const handleScroll = (id) => {
           {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-0.5">
             {NAV_LINKS.map((link, i) => {
-              const isRoute = link === "Blogs";
+              const routePath = ROUTE_LINKS[link];
+              const isRoute = Boolean(routePath);
 
                return isRoute ? (
                 <Link
                  key={link}
-                 to="/blogs"
+                 to={routePath}
+                 onClick={() => setMenuOpen(false)}
                  initial={{ opacity: 0, y: -10 }}
                  animate={{ opacity: 1, y: 0 }}
                  transition={{ delay: 0.1 + i * 0.07, duration: 0.4 }}
@@ -131,12 +138,13 @@ const handleScroll = (id) => {
           >
             <div className="px-5 pb-5 pt-2 flex flex-col gap-1">
                {NAV_LINKS.map((link, i) => {
-              const isRoute = link === "Blogs";
+              const routePath = ROUTE_LINKS[link];
+              const isRoute = Boolean(routePath);
 
                return isRoute ? (
                 <Link
                  key={link}
-                 to="/blogs"
+                 to={routePath}
                  initial={{ opacity: 0, y: -10 }}
                  animate={{ opacity: 1, y: 0 }}
                  transition={{ delay: 0.1 + i * 0.07, duration: 0.4 }}
