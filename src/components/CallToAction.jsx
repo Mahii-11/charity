@@ -1,7 +1,31 @@
 import { motion } from "framer-motion";
 import { Reveal } from "../components/ui/Reveal";
+import { getCallToAction } from "../services/api";
+import { useEffect, useState } from "react";
 
 export function CallToAction() {
+  const [cta, setCta] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+   useEffect(() => {
+    const fetchCTA = async () => {
+      try {
+        const data = await getCallToAction();
+        setCta(data?.[0]); // API is array
+      } catch (err) {
+        console.error("CTA load failed:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCTA();
+  }, []);
+
+   if (loading) return null;
+
+
+
   return (
     <section className="py-28 bg-gradient-to-br from-emerald-600 to-teal-700 text-white text-center relative overflow-hidden">
       {/* Animated background orbs */}
@@ -29,20 +53,19 @@ export function CallToAction() {
             }}
             transition={{ duration: 2.5, repeat: Infinity }}
           >
-            Take Action Today
+             {cta?.badge}
           </motion.span>
 
           <h2 className="font-display text-display-xl font-extrabold text-balance mb-6">
-            Don't Wait.
-            <span className="block text-amber-300">Someone Needs You Now.</span>
+            {cta?.title?.line1}.
+            <span className="block text-amber-300"> {cta?.title?.highlight}</span>
           </h2>
 
           <p
             className="text-body-xl text-emerald-100/80 text-pretty mb-12 mx-auto"
             style={{ maxWidth: "50ch" }}
           >
-            Millions of people wake up each day without clean water, food, or shelter. A single
-            decision from you can rewrite their story.
+            {cta?.description}
           </p>
 
           <motion.a
@@ -66,7 +89,7 @@ export function CallToAction() {
 
           <div className="flex justify-center">
               <p className="mt-7 text-label-sm text-emerald-200/60 font-normal normal-case tracking-wide">
-            Takes 30 seconds · 100% secure · Tax deductible
+             {cta?.note}
           </p>
           </div>
         </Reveal>

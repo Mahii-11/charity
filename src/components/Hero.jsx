@@ -1,12 +1,48 @@
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform, easeOut } from "framer-motion";
 import { fadeUp, staggerContainer } from "../lib/animations";
+import { getHeroData } from "../services/api";
+import HeroSkeleton from "../loaders/HeroSkeleton";
 
 export function Hero() {
+  const [hero, setHero] = useState(null);
+  const [loading, setLoading] = useState(true);
   const heroRef = useRef(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
   const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
   const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+
+
+  useEffect(() => {
+    const loadHero = async () => {
+      try {
+        setLoading(true);
+
+        const data = await getHeroData(); // already normalized in api.js
+
+        setHero(data?.[0] || null); // ONLY this needed
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadHero();
+  }, []);
+
+
+if (loading || !hero) {
+  return <HeroSkeleton />;
+}
+
+  
+  const stats = hero?.stats || [];
+  const words = hero?.title?.split(" ") || [];
+  const line1 = words.slice(0, 2).join(" "); 
+  const line2 = words.slice(2, 4).join(" "); 
+  const line3 = words.slice(4).join(" ");    
+  const campaign = hero?.campaign;
 
   return (
     <section
@@ -47,33 +83,31 @@ export function Hero() {
              variants={fadeUp}
              className="text-[0.8rem] tracking-wide uppercase text-amber-300 mb-5 inline-block px-4 py-1.5 rounded-full bg-amber-400/15 font-medium"
              >
-             Together We Make A Difference
+              {hero.badge}
            </motion.p>
 
            <motion.h1
              variants={fadeUp}
              className="font-display text-[clamp(2.5rem,5vw,4rem)] leading-[1.1] font-extrabold text-white mb-6 tracking-tight"
             >
-           Your Help Can
+             {line1}
              <motion.span
                className="block text-amber-400 mt-2"
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
                  transition={{ delay: 0.5, duration: 0.7, ease: easeOut }}
                   >
-                 Change Lives
+                {line2}
                </motion.span>
-             <span className="block mt-2 text-white/90">Forever</span>
+             <span className="block mt-2 text-white/90"> {line3}</span>
                 </motion.h1>
 
-            <motion.p
-              variants={fadeUp}
-              className="text-[1.05rem] leading-[1.75] text-emerald-100/80 mb-10 mx-auto lg:mx-0"
+           <motion.div
+               variants={fadeUp}
+               className="text-[1.05rem] leading-[1.75] text-emerald-100/80 mb-10 mx-auto lg:mx-0"
                style={{ maxWidth: "42ch" }}
-            >
-             Every donation, big or small, ripples out into the world — feeding families,
-             educating children, and rebuilding hope for those who need it most.
-            </motion.p>
+               dangerouslySetInnerHTML={{ __html: hero.description }}
+            />
 
           {/* CTAs */}
           <motion.div
@@ -114,17 +148,13 @@ export function Hero() {
             variants={staggerContainer(0.1)}
             className="mt-14 grid grid-cols-3 gap-6 max-w-xs mx-auto lg:mx-0"
           >
-            {[
-              { v: "142K+", l: "Lives Helped" },
-              { v: "$8.3M", l: "Raised" },
-              { v: "98%", l: "To Programs" },
-            ].map((s) => (
-              <motion.div key={s.l} variants={fadeUp} className="text-center lg:text-left">
+           {stats.map((s) => (
+              <motion.div key={s.count} variants={fadeUp} className="text-center lg:text-left">
                <p className="font-display font-extrabold text-2xl text-amber-400">
-                  {s.v}
+                   {s.count}
                </p>
                <p className="text-[0.8rem] text-emerald-200/60 mt-1 leading-tight">
-                   {s.l}
+                    {s.text}
               </p>
               </motion.div>
             ))}
@@ -154,7 +184,9 @@ export function Hero() {
               }}
               transition={{ duration: 3, repeat: Infinity }}
             >
-          <img src="/images/hero.png" alt= "image" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+          <img 
+                src={campaign?.image}
+                alt={campaign?.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
        
           <motion.div
             className="absolute inset-0"
@@ -165,20 +197,20 @@ export function Hero() {
 
             <div className="space-y-3">
               <div className="flex justify-between items-baseline">
-                <span className="text-body-sm text-white/80 font-medium">Clean Water Campaign</span>
-                <span className="font-display font-bold text-body-sm text-amber-400">64%</span>
+                <span className="text-body-sm text-white/80 font-medium">{campaign?.title}</span>
+                <span className="font-display font-bold text-body-sm text-amber-400">{campaign?.progress}%</span>
               </div>
               <div className="w-full bg-white/20 rounded-full h-2 overflow-hidden">
                 <motion.div
                   className="bg-amber-400 h-2 rounded-full"
                   initial={{ width: 0 }}
-                  animate={{ width: "64%" }}
+                  animate={{ width: `${campaign?.progress}%` }}
                   transition={{ delay: 1, duration: 1.2, ease: easeOut }}
                 />
               </div>
               <div className="flex justify-between text-label-sm text-white/50 font-normal normal-case tracking-normal">
-                <span>$48,200 raised</span>
-                <span>Goal: $75,000</span>
+                <span>{campaign?.raised} raised</span>
+              <span>Goal: {campaign?.goal}</span>
               </div>
             </div>
           </motion.div>

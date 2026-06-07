@@ -1,5 +1,7 @@
 import { Link, Navigate, useParams } from "react-router";
-import { IMPACT_STORIES } from "../data/impactStories";
+import { useEffect, useState } from "react";
+import { getImpactStories } from "../services/api";
+import ImpactStoryDetailsSkeleton from "../loaders/ImpactStoryDetailsSkeleton";
 
 function StatCard({ label, value }) {
   return (
@@ -14,13 +16,47 @@ function StatCard({ label, value }) {
 
 export default function ImpactStoryDetailsPage() {
   const { slug } = useParams();
-  const story = IMPACT_STORIES.find((item) => item.slug === slug);
+  const [story, setStory] = useState(null);
+  const [relatedStories, setRelatedStories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  if (!story) {
-    return <Navigate to="/" replace />;
+ useEffect(() => {
+    const loadStories = async () => {
+      try {
+        setLoading(true)
+        setError(null);
+        const data = await getImpactStories();
+        const found = data?.find((item) => item.slug === slug);
+        setStory(found || null);
+         const related = data?.filter((item) => item.slug !== slug);
+         setRelatedStories(related || []);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadStories();
+  }, [slug]);
+
+  if (loading) return <ImpactStoryDetailsSkeleton />
+   if (error) {
+    return (
+      <div className="flex min-h-screen items-center justify-center text-red-500">
+        {error}
+      </div>
+    );
   }
 
-  const relatedStories = IMPACT_STORIES.filter((item) => item.slug !== story.slug);
+  if (!story) return <Navigate to="/" replace />;
+
+    if (loading) {
+      return (
+        <ImpactStoryDetailsSkeleton />
+      )
+    }
 
   return (
     <section className="relative overflow-hidden bg-white pb-16 pt-28 sm:pt-32">
@@ -66,9 +102,9 @@ export default function ImpactStoryDetailsPage() {
             </div>
 
             <div className="mt-7 space-y-4 text-[15px] leading-relaxed text-slate-700 sm:text-base">
-              {story.fullStory.map((paragraph, index) => (
-                <p key={`${story.id}-${index}`}>{paragraph}</p>
-              ))}
+            {typeof story.fullStory === "string"
+               ? story.fullStory.split("\r\n")
+               : story.fullStory?.map((p, i) => <p key={i}>{p}</p>)}
             </div>
           </article>
 
@@ -83,21 +119,50 @@ export default function ImpactStoryDetailsPage() {
               </div>
             </div>
 
-            <div className="rounded-3xl border border-emerald-100 bg-white/80 p-5 shadow-sm sm:p-6">
-              <h3 className="text-lg font-semibold text-slate-900">Explore More Stories</h3>
-              <div className="mt-4 space-y-3">
-                {relatedStories.map((item) => (
-                  <Link
-                    key={item.id}
-                    to={`/impact-stories/${item.slug}`}
-                    className="block rounded-2xl border border-emerald-100/90 bg-white px-4 py-3 transition-all hover:-translate-y-0.5 hover:border-emerald-200"
-                  >
-                    <p className="text-sm font-semibold text-slate-900">{item.title}</p>
-                    <p className="mt-1 text-xs text-slate-500">{item.location}</p>
-                  </Link>
-                ))}
-              </div>
-            </div>
+              <div className="rounded-3xl border border-emerald-100 bg-white/80 p-5 shadow-sm sm:p-6">
+  
+  <h3 className="text-lg font-semibold text-slate-900">
+    Explore More Stories
+  </h3>
+
+  <div className="mt-4 space-y-3">
+
+    {relatedStories?.length > 0 ? (
+      relatedStories.map((item) => (
+        <Link
+          key={item.id}
+          to={`/impact-stories/${item.slug}`}
+          className="block rounded-2xl border border-emerald-100/90 bg-white px-4 py-3 transition-all duration-200 hover:-translate-y-0.5 hover:border-emerald-200 hover:shadow-sm"
+        >
+          <p className="text-sm font-semibold text-slate-900">
+            {item.title}
+          </p>
+
+          <p className="mt-1 text-xs text-slate-500">
+            {item.location}
+          </p>
+        </Link>
+      ))
+    ) : (
+      <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-emerald-200 bg-emerald-50/40 px-4 py-8 text-center">
+        
+        {/* icon */}
+        <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
+          ☆
+        </div>
+
+        <p className="text-sm font-semibold text-slate-800">
+          No related stories found
+        </p>
+
+        <p className="mt-1 text-xs text-slate-500">
+          New stories will appear here once available
+        </p>
+      </div>
+    )}
+
+  </div>
+</div>
 
             <div className="rounded-3xl border border-emerald-100 bg-emerald-600 p-5 text-white shadow-sm sm:p-6">
               <p className="text-xs font-semibold uppercase tracking-wide text-emerald-100">

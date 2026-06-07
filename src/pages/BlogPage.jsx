@@ -1,34 +1,93 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { fadeUp, staggerContainer } from "../lib/animations";
 import { BlogCard } from "../components/blogs/BlogCard";
-import { useMemo, useState } from "react";
-import { BLOG_POSTS, CATEGORIES } from "../data/blogs";
+import { useEffect, useMemo, useState } from "react";
+import { CATEGORIES } from "../data/blogs";
 import { BlogFilters } from "../components/blogs/BlogFiltersProps";
 import { Reveal } from "../components/ui/Reveal";
+import { getBlogCtaData, getBlogHeroData, getBlogPosts } from "../services/api";
+import BlogPageSkeleton from "../loaders/BlogPageSkeleton";
 
- const STATS = [
-    { value: "8+", label: "Stories Published" },
-    { value: "12K+", label: "Monthly Readers" },
-    { value: "6", label: "Impact Categories" },
-  ];
+
 
   const normalize = (str) => str.toLowerCase();
 
 
 export default function BlogPage() {
+     const [blogPosts, setBlogPosts] = useState([]);
      const [activeCategory, setActiveCategory] = useState("All");
+     const [hero, setHero] = useState(null);
+     const [loading, setLoadin] = useState(true);
+     const [cta, setCta] = useState(null);
+
+    useEffect(() => {
+      const loadBlogHero = async () => {
+        try {
+          setLoadin(true);
+          const data = await getBlogHeroData();
+           setHero(data?.[0] || null);
+        } catch (error) {
+          console.error("Error fetching Blog Hero data", error);
+        } finally {
+          setLoadin(false);
+        }
+      }
+      loadBlogHero();
+    }, [])
+
+
+
+useEffect(() => {
+  const loadCTA = async () => {
+    const res = await getBlogCtaData();
+
+    setCta(res?.data?.data?.[0] || null);
+  };
+
+  loadCTA();
+}, []);
+
+
+
+
+    
+
+
+
+    useEffect(() => {
+       const loadPosts = async () => {
+        try {
+           const data = await getBlogPosts();
+           setBlogPosts(data);
+           console.log("Fetched blog posts:", data);
+        } catch (error) {
+          console.error("Error fetching blog posts:", error);
+        }
+       }
+        loadPosts();
+    }, []) 
    
-    const filteredPosts = useMemo(() => {
-    const nonFeatured = BLOG_POSTS.filter((p) => !p.featured);
+  /*  const filteredPosts = useMemo(() => {
+    const nonFeatured = blogPosts.filter((p) => !p.featured);
 
     if (activeCategory === "All") return nonFeatured;
 
     return nonFeatured.filter((p) => p.category === activeCategory);
-  }, [activeCategory]);
+  }, [blogPosts, activeCategory]); */
+
+  const filteredPosts = useMemo(() => {
+  const nonFeatured = blogPosts;
+
+  if (activeCategory === "All") return nonFeatured;
+
+  return nonFeatured.filter(
+    (p) => normalize(p.category) === normalize(activeCategory)
+  );
+}, [blogPosts, activeCategory]);
 
   // counts per category
-   const counts = useMemo(() => {
-  const nonFeatured = BLOG_POSTS.filter((p) => !p.featured);
+ /*  const counts = useMemo(() => {
+  const nonFeatured = blogPosts.filter((p) => !p.featured);
 
   const result = {};
   result["All"] = nonFeatured.length;
@@ -40,7 +99,31 @@ export default function BlogPage() {
   });
 
   return result;
-}, []);
+}, [blogPosts]); */
+
+
+const counts = useMemo(() => {
+  const result = {};
+
+  // all posts count
+  result["All"] = blogPosts.length;
+
+  // category counts
+  CATEGORIES.filter((c) => c !== "All").forEach((cat) => {
+    result[cat] = blogPosts.filter(
+      (p) => normalize(p.category) === normalize(cat)
+    ).length;
+  });
+
+  return result;
+}, [blogPosts]);
+
+
+ if (loading || !hero) {
+    return (
+      <BlogPageSkeleton />
+    );
+  }
 
 
 
@@ -90,15 +173,15 @@ export default function BlogPage() {
               variants={fadeUp}
               className="inline-block text-label-sm text-emerald-400 mb-5 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20"
             >
-              Stories · Insights · Impact
+              {hero?.badge}
             </motion.span>
 
             <motion.h1
               variants={fadeUp}
               className="font-display text-display-2xl font-extrabold text-white text-balance mb-6"
             >
-              Stories That
-              <span className="block text-emerald-400"> Move the World</span>
+              {hero?.title?.line1}
+              <span className="block text-emerald-400"> {hero?.title?.line2}</span>
             </motion.h1>
 
             <motion.p
@@ -106,8 +189,7 @@ export default function BlogPage() {
               className="text-body-xl text-slate-400 text-pretty mb-10"
               style={{ maxWidth: "54ch" }}
             >
-              Real stories from the field. Updates from our programs. Insights on how compassion,
-              technology, and community are changing lives every single day.
+             {hero?.description}
             </motion.p>
 
             {/* Stats row */}
@@ -115,12 +197,17 @@ export default function BlogPage() {
               variants={fadeUp}
               className="flex flex-wrap gap-8"
             >
-            {STATS.map((s) => {
-                 <div key={s.l}>
-                  <p className="font-display font-extrabold text-display-md text-emerald-400">{s.v}</p>
-                  <p className="text-label-sm text-slate-500 font-normal normal-case tracking-normal mt-0.5">{s.l}</p>
-                </div>
-            })}
+         {hero?.stats?.map((s) => (
+  <div key={s.label}>
+    <p className="font-display font-extrabold text-display-md text-emerald-400">
+      {s.value}
+    </p>
+
+    <p className="text-label-sm text-slate-500 font-normal normal-case tracking-normal mt-0.5">
+      {s.label}
+    </p>
+  </div>
+))}
             </motion.div>
           </motion.div>
         </div>
@@ -198,19 +285,20 @@ export default function BlogPage() {
       {/* small label */}
       <div className="flex justify-center">
          <p className="text-xs sm:text-sm tracking-widest uppercase text-emerald-600 mb-3">
-        Make Your Own Impact
+        {cta?.badge}
       </p>
 
       </div>
       {/* heading */}
       <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 leading-tight mb-5">
-        Every Story Here Started With One Donor
+         {cta?.title?.line1}
+          <br />
+         {cta?.title?.line2}
       </h2>
 
       {/* description */}
       <p className="text-base sm:text-lg text-slate-500 mb-10 mx-auto max-w-[52ch] leading-relaxed">
-        The stories you've just read weren’t inevitable — they happened because someone chose to give.
-        Be the beginning of the next one.
+         {cta?.description}
       </p>
 
       {/* buttons */}

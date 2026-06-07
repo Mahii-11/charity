@@ -1,24 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getcontactInfoData, submitContactForm } from "../services/api";
+import toast from "react-hot-toast";
 
-const CONTACT_INFO = [
-  {
-    title: "Email Us",
-    value: "support@hopebridge.org",
-    hint: "We usually reply within 24 hours.",
-  },
-  {
-    title: "Call Us",
-    value: "+880 1700-000000",
-    hint: "Sat - Thu, 9:00 AM - 6:00 PM",
-  },
-  {
-    title: "Visit Office",
-    value: "Dhaka, Bangladesh",
-    hint: "Community support center",
-  },
-];
+
 
 export default function ContactPage() {
+  const [info, setInfo] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -26,21 +14,86 @@ export default function ContactPage() {
     message: "",
   });
   const [submitted, setSubmitted] = useState(false);
+ 
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+const validate = () => {
+  if (!formData.name || !formData.email || !formData.subject || !formData.message) {
+    toast.error("All fields are required!");
+    return false;
+  }
+  return true;
+};
+
+
+   const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  if (!validate()) return;
+
+  setLoading(true);
+
+  try {
+    const data = new FormData();
+
+    data.append("name", formData.name);
+    data.append("email", formData.email);
+    data.append("subject", formData.subject);
+    data.append("message", formData.message);
+
+    const res = await submitContactForm(data);
+
+    toast.success(res.message || "Message sent successfully!");
     setSubmitted(true);
-  };
+
+    setFormData({
+      name: "",
+      email: "",
+      subject: "",
+      message: ""
+    });
+
+    setTimeout(() => {
+      setSubmitted(false);
+    }, 1000);
+
+  } catch (error) {
+    toast.error(error?.message || "Something went wrong!");
+  } finally {
+    setLoading(false);
+  }
+};
+
+
+
+  useEffect(() => {
+    const loadContactInfo = async () => {
+      try {
+        const data = await getcontactInfoData();
+        setInfo(data);
+      } catch (error) {
+        console.error("Ërror fetching Contact Info Data", error)
+      }
+      
+    }
+    loadContactInfo();
+  }, [])
+
+
+
+
 
   return (
     <section className="relative overflow-hidden bg-white pb-16 pt-28 sm:pt-32">
       <div className="pointer-events-none absolute -top-20 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-emerald-200/25 blur-3xl" />
-      <div className="pointer-events-none absolute bottom-[-140px] right-[-100px] h-80 w-80 rounded-full bg-teal-100/30 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-35 -right-25 h-80 w-80 rounded-full bg-teal-100/30 blur-3xl" />
 
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <div className="max-w-2xl">
@@ -58,7 +111,7 @@ export default function ContactPage() {
 
         <div className="mt-10 grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
           <aside className="space-y-4">
-            {CONTACT_INFO.map((item) => (
+            {info.map((item) => (
               <div
                 key={item.title}
                 className="rounded-2xl border border-emerald-100 bg-white/80 p-5 shadow-sm"
@@ -75,11 +128,11 @@ export default function ContactPage() {
           <div className="rounded-3xl border border-emerald-100/80 bg-white/80 p-5 shadow-[0_0_0_1px_rgba(16,185,129,0.08),0_18px_50px_rgba(15,23,42,0.08)] backdrop-blur sm:p-7">
             <h2 className="text-xl font-semibold text-slate-900">Send a Message</h2>
 
-            {submitted ? (
+           {submitted ? (
               <div className="mt-4 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm font-medium text-emerald-800">
                 Thanks! Your message has been received. We will contact you soon.
               </div>
-            ) : null}
+            ) : null}  
 
             <form onSubmit={handleSubmit} className="mt-5 space-y-4">
               <div className="grid gap-4 sm:grid-cols-2">
@@ -138,9 +191,10 @@ export default function ContactPage() {
 
               <button
                 type="submit"
+                disabled={loading}
                 className="inline-flex items-center rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-700"
               >
-                Send Message
+                 {loading ? "Sending..." : "Send Message"}
               </button>
             </form>
           </div>

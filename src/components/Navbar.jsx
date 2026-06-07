@@ -5,6 +5,7 @@ import { motion, AnimatePresence, easeOut } from "framer-motion";
 
 const NAV_LINKS = ["Home", "About", "Causes", "Donate", "Blogs", "Contact"];
 const ROUTE_LINKS = {
+  Home: "/",
   About: "/about",
   Blogs: "/blogs",
   Contact: "/contact",
@@ -15,10 +16,8 @@ export function Navbar() {
   const navigate = useNavigate();
 
 const handleScroll = (id) => {
-  navigate("/");
-  setTimeout(() => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-  }, 100);
+  navigate(`/#${id}`);
+  setMenuOpen(false);
 };
   
 
@@ -42,9 +41,11 @@ const handleScroll = (id) => {
             <span className="flex items-center justify-center w-9 h-9 rounded-full bg-emerald-600 text-white font-display font-bold text-lg leading-none">
               H
             </span>
-            <span className="font-display text-body-lg font-extrabold tracking-tight text-slate-900">
+            <Link to="/">
+             <span className="font-display text-body-lg font-extrabold tracking-tight text-slate-900">
               HopeBridge
             </span>
+            </Link>
           </motion.a>
 
           {/* Desktop nav */}
@@ -73,7 +74,10 @@ const handleScroll = (id) => {
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.1 + i * 0.07, duration: 0.4 }}
-                      onClick={() => handleScroll(link.toLowerCase())}
+                      onClick={(e) => {
+                      e.preventDefault();
+                      handleScroll(link.toLowerCase());
+                      }}
                       className="relative px-4 py-2 text-body-xs font-medium font-body text-slate-600 hover:text-emerald-700 rounded-lg transition-colors duration-200 group tracking-wide"
                       >
                       {link}
@@ -160,7 +164,10 @@ const handleScroll = (id) => {
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.1 + i * 0.07, duration: 0.4 }}
-                      onClick={() => handleScroll(link.toLowerCase())}
+                      onClick={(e) => {
+                      e.preventDefault();
+                      handleScroll(link.toLowerCase());
+                      }}
                       className="relative px-4 py-2 text-body-xs font-medium font-body text-slate-600 hover:text-emerald-700 rounded-lg transition-colors duration-200 group tracking-wide"
                       >
                       {link}

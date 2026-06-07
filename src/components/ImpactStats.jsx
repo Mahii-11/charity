@@ -1,9 +1,43 @@
 import { motion, easeOut } from "framer-motion";
-import { STATS } from "../data/data";
 import { fadeUp } from "../lib/animations";
 import { StaggerReveal } from "../components/ui/Reveal";
+import { useEffect, useState } from "react";
+import { getRealImpactData } from "../services/api";
+import { ImpactStatsSkeleton } from "../loaders/ImpactStatsSkeleton";
 
 export function ImpactStats() {
+  const [stats, setStats] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() =>{
+    const loadImpactStats = async () => {
+      try {
+        setLoading(true);
+        const data = await getRealImpactData();
+        setStats(data);
+      } catch (error) {
+        console.error("Error fetching impact stats:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadImpactStats();
+
+  }, [])
+
+
+  if (loading) {
+    return (
+     <ImpactStatsSkeleton />
+    )
+  }
+
+
+
+
+
+
   return (
     <section id="about" className="py-28 bg-slate-50">
       <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-12">
@@ -32,7 +66,7 @@ export function ImpactStats() {
         {/* Stats Grid */}
         <StaggerReveal delay={0.1} className="grid grid-cols-2 lg:grid-cols-4 gap-6">
 
-          {STATS.map((s) => (
+          {stats.map((s) => (
             <motion.div
               key={s.label}
               variants={fadeUp}

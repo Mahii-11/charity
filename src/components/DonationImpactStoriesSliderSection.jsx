@@ -1,8 +1,35 @@
 import { Link } from "react-router";
-import { IMPACT_STORIES } from "../data/impactStories";
+import { useEffect, useState } from "react";
+import { getImpactStories } from "../services/api";
+import ImpactStoriesSkeleton from "../loaders/ImpactStoriesSkeleton";
+
+
+
+const CATEGORY_THEME = {
+  Water: {
+    gradient: "from-teal-500 to-emerald-600",
+    accentColor: "text-teal-600 bg-teal-50 border-teal-200",
+  },
+  Education: {
+    gradient: "from-blue-500 to-indigo-600",
+    accentColor: "text-blue-600 bg-blue-50 border-blue-200",
+  },
+  Healthcare: {
+    gradient: "from-rose-500 to-pink-600",
+    accentColor: "text-rose-600 bg-rose-50 border-rose-200",
+  },
+};
+
+
+
+
+
 
 function ImpactCard({ post }) {
-  return (
+
+   const theme = CATEGORY_THEME[post.category] || CATEGORY_THEME.Water;
+
+return (
     <article
       className={[
         "group relative w-[320px] sm:w-[360px] lg:w-[420px]",
@@ -49,7 +76,7 @@ function ImpactCard({ post }) {
               <span
                 className={[
                   "inline-flex items-center rounded-full border px-3 py-1 text-xs sm:text-sm font-semibold",
-                  post.accentColor,
+                  theme.accentColor,
                   "backdrop-blur bg-white/60",
                 ].join(" ")}
               >
@@ -128,7 +155,7 @@ function ImpactCard({ post }) {
             <div
               className={[
                 "absolute inset-0 bg-gradient-to-r",
-                post.gradient,
+                theme.gradient,
                 "opacity-90",
               ].join(" ")}
               style={{ width: "58%" }}
@@ -198,7 +225,32 @@ function ImpactCard({ post }) {
 }
 
 export default function DonationImpactStoriesSliderSection() {
-  const items = IMPACT_STORIES;
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+
+  useEffect(() => {
+      const loadImpactStories = async () => {
+        try {
+          setLoading(true);
+          const data = await getImpactStories();
+          setItems(data);
+          console.log("Fetched impact stories:", data);
+        } catch (error) {
+          console.error("Error fetching impact stories:", error);
+        } finally {
+          setLoading(false);
+        }
+      }
+
+      loadImpactStories();
+  },[])
+
+  if (loading) {
+    return (
+      <ImpactStoriesSkeleton />
+    )
+  }
 
   return (
     <section className="relative bg-white">

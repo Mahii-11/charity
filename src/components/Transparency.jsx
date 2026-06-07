@@ -1,9 +1,48 @@
 import { motion, easeOut } from "framer-motion";
-import { TRANSPARENCY } from "../data/data";
 import { slideLeft, slideRight } from "../lib/animations";
 import { Reveal } from "../components/ui/Reveal";
+import { useEffect, useState } from "react";
+import { getActivityDistributionData } from "../services/api";
+import { TransparencySkeleton } from "../loaders/TransparencySkeleton";
+
+const COLOR_MAP = {
+  emerald: "bg-emerald-500",
+  blue: "bg-blue-400",
+  amber: "bg-amber-400",
+  slate: "bg-slate-400",
+};
+
 
 export function Transparency() {
+  const [transparency, setTransparency] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadTransparency = async () => {
+      try {
+        setLoading(true);
+        const data = await getActivityDistributionData();
+        setTransparency(data);
+
+      } catch (error) {
+        console.error("Error fetching transparency data:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadTransparency();
+  }, [])
+
+
+  if (loading) {
+    return (
+     <TransparencySkeleton />
+    )
+  }
+   
+
+
+
   return (
     <section className="py-24 bg-slate-900 text-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10">
@@ -44,7 +83,7 @@ export function Transparency() {
 
           {/* Right: bars */}
           <Reveal variants={slideRight} className="flex-1 w-full space-y-5">
-            {TRANSPARENCY.map((item, i) => (
+            {transparency.map((item, i) => (
               <motion.div
                 key={item.label}
                 initial={{ opacity: 0, x: 40 }}
@@ -54,11 +93,11 @@ export function Transparency() {
               >
                 <div className="flex justify-between items-baseline mb-2">
                   <span className="text-body-sm font-medium text-slate-300">{item.label}</span>
-                  <span className="font-display font-bold text-body-sm text-white">{item.pct}%</span>
+                  <span className="font-display font-bold text-body-sm text-white">{item.percentage}%</span>
                 </div>
                 <div className="w-full bg-slate-700/70 rounded-full h-2.5 overflow-hidden">
                   <motion.div
-                    className={`${item.color} h-2.5 rounded-full`}
+                    className={`${COLOR_MAP[item.color] || COLOR_MAP.slate} h-2.5 rounded-full`}
                     initial={{ width: 0 }}
                     whileInView={{ width: `${item.pct}%` }}
                     viewport={{ once: true }}

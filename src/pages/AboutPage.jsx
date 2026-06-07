@@ -1,98 +1,98 @@
-const CORE_VALUES = [
-  {
-    title: "Human Dignity First",
-    text: "Every program is designed around people, not just numbers. We listen before we act and co-create with communities.",
-  },
-  {
-    title: "Evidence-Led Impact",
-    text: "We combine field insight with measurable outcomes so every donation can be traced to real, meaningful change.",
-  },
-  {
-    title: "Local Partnership",
-    text: "Our strongest results come from working with local educators, health workers, youth leaders, and civil society groups.",
-  },
-  {
-    title: "Accountability by Design",
-    text: "Transparent reporting, regular reviews, and independent checks are embedded into our operations from day one.",
-  },
-];
+import { useEffect, useState } from "react";
+import { getAboutHeroData, getAboutMissionVision, getCOREVALUES, getLeaderShip, getTimeLine } from "../services/api";
+import AboutPageSkeleton from "../loaders/AboutPageSkeleton";
 
-const TIMELINE = [
-  {
-    year: "2016",
-    title: "Founded With One Core Idea",
-    text: "HopeBridge started with a small volunteer group committed to making giving more transparent and community-led.",
-  },
-  {
-    year: "2019",
-    title: "Scaled Multi-District Programs",
-    text: "We expanded into health, education, and water initiatives while building local implementation partnerships.",
-  },
-  {
-    year: "2022",
-    title: "Digital Transparency Rollout",
-    text: "Program tracking and donor reporting systems were upgraded to provide faster and clearer impact visibility.",
-  },
-  {
-    year: "Today",
-    title: "Integrated NGO Platform",
-    text: "We now operate as a cross-functional NGO with field teams, technical experts, and governance advisors.",
-  },
-];
 
-const LEADERSHIP = [
-  {
-    name: "Ayesha Rahman",
-    role: "Executive Director",
-    bio: "Leads strategy, public partnerships, and organizational growth with over 14 years in development leadership.",
-  },
-  {
-    name: "Nafiz Karim",
-    role: "Head of Programs",
-    bio: "Drives implementation quality across water, education, and healthcare portfolios with field-first operations.",
-  },
-  {
-    name: "Tahmina Islam",
-    role: "Director, Governance & Finance",
-    bio: "Oversees compliance, risk controls, and sustainable financial planning for long-term institutional resilience.",
-  },
-];
+
+
+
+
+
+
 
 export default function AboutPage() {
+  const [core, setCore] = useState([]);
+  const [timeLine, setTimeLine] = useState([]);
+  const [leader, setLeader] = useState([]);
+  const  [aboutHeroData, setAboutHeroData] = useState([])
+  const [missionVisionData, setMissionVisionData] = useState([])
+  const [loading, setLoading] = useState(true)
+
+useEffect(() => {
+  const loadData = async () => {
+    try {
+      setLoading(true);
+
+      const [
+        hero,
+        mission,
+        coreValues,
+        timeline,
+        leaders
+      ] = await Promise.all([
+        getAboutHeroData(),
+        getAboutMissionVision(),
+        getCOREVALUES(),
+        getTimeLine(),
+        getLeaderShip(),
+      ]);
+
+      setAboutHeroData(hero?.[0] || null);
+      setMissionVisionData(mission);
+      setCore(coreValues);
+      setTimeLine(timeline);
+      setLeader(leaders);
+
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  loadData();
+}, []);
+
+
+
+if (loading) {
+  return <AboutPageSkeleton />;
+}
+
+
+
+
   return (
-    <div className="bg-white pt-24 sm:pt-28">
+    <div className="bg-white pt-16">
       <section className="relative overflow-hidden border-b border-slate-100 bg-slate-900 py-20 sm:py-24">
         <div className="pointer-events-none absolute -top-28 left-1/2 h-80 w-80 -translate-x-1/2 rounded-full bg-emerald-500/10 blur-3xl" />
         <div className="pointer-events-none absolute bottom-[-120px] right-[-80px] h-72 w-72 rounded-full bg-teal-500/10 blur-3xl" />
 
         <div className="relative mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
           <p className="inline-flex rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-300">
-            About HopeBridge
+            {aboutHeroData?.badge}
           </p>
           <h1 className="mt-5 max-w-4xl text-4xl font-extrabold leading-tight text-white sm:text-5xl lg:text-6xl">
-            Building Long-Term Social Impact With Trust, Data, and Community
-            Leadership
+           {aboutHeroData?.title?.line1}
+           <br />
+           {aboutHeroData?.title?.line2}
+           <br />
+           {aboutHeroData?.title?.line3}
           </h1>
           <p className="mt-6 max-w-3xl text-base leading-relaxed text-slate-300 sm:text-lg">
-            HopeBridge is a mission-driven NGO focused on improving outcomes in
-            education, healthcare, and safe water access for underserved
-            communities. We bring together donors, local partners, and technical
-            teams to deliver measurable and lasting impact.
+            {aboutHeroData?.description}
           </p>
 
           <div className="mt-10 grid gap-4 sm:grid-cols-3">
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-              <p className="text-3xl font-bold text-emerald-300">120K+</p>
-              <p className="mt-1 text-sm text-slate-300">People Reached</p>
+            {aboutHeroData?.stats?.map((stat, i) => (
+              <div
+               key={i}
+               className="rounded-2xl border border-white/10 bg-white/5 p-4">
+              <p className="text-3xl font-bold text-emerald-300">{stat.value}</p>
+              <p className="mt-1 text-sm text-slate-300">{stat.label}</p>
             </div>
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-              <p className="text-3xl font-bold text-emerald-300">38</p>
-              <p className="mt-1 text-sm text-slate-300">Programs Completed</p>
-            </div>
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-              <p className="text-3xl font-bold text-emerald-300">16</p>
-              <p className="mt-1 text-sm text-slate-300">District Partnerships</p>
-            </div>
+            ))}
+           
           </div>
         </div>
       </section>
@@ -100,31 +100,25 @@ export default function AboutPage() {
       <section className="mx-auto grid max-w-7xl gap-8 px-5 py-16 sm:px-8 sm:py-20 lg:grid-cols-2 lg:px-10">
         <article className="rounded-3xl border border-emerald-100 bg-white p-7 shadow-sm">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700">
-            Our Mission
+            {missionVisionData?.mission?.label}
           </p>
           <h2 className="mt-3 text-2xl font-bold text-slate-900 sm:text-3xl">
-            Turn generosity into structured, sustainable change.
+           {missionVisionData?.mission?.title}
           </h2>
           <p className="mt-4 text-base leading-relaxed text-slate-600">
-            We design and deliver high-quality social programs that solve urgent
-            needs today while building systems that continue to serve communities
-            tomorrow. Our model blends field execution, local partnership, and
-            transparent monitoring.
+           {missionVisionData?.mission?.text}
           </p>
         </article>
 
         <article className="rounded-3xl border border-emerald-100 bg-emerald-50/50 p-7 shadow-sm">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700">
-            Our Vision
+           {missionVisionData?.vision?.label}
           </p>
           <h2 className="mt-3 text-2xl font-bold text-slate-900 sm:text-3xl">
-            A future where every community can thrive with dignity.
+           {missionVisionData?.vision?.title}
           </h2>
           <p className="mt-4 text-base leading-relaxed text-slate-600">
-            We imagine resilient communities where children stay in school,
-            families access quality healthcare, and safe water is never a
-            privilege. We work toward this through collaborative and scalable
-            intervention models.
+            {missionVisionData?.vision?.text}
           </p>
         </article>
       </section>
@@ -137,7 +131,7 @@ export default function AboutPage() {
             every stakeholder.
           </p>
           <div className="mt-8 grid gap-4 md:grid-cols-2">
-            {CORE_VALUES.map((value) => (
+            {core.map((value) => (
               <article
                 key={value.title}
                 className="rounded-2xl border border-emerald-100 bg-white p-5"
@@ -157,7 +151,7 @@ export default function AboutPage() {
       <section className="mx-auto max-w-7xl px-5 py-16 sm:px-8 sm:py-20 lg:px-10">
         <h2 className="text-3xl font-bold text-slate-900">Our Journey</h2>
         <div className="mt-8 grid gap-4 md:grid-cols-2">
-          {TIMELINE.map((item) => (
+          {timeLine.map((item) => (
             <article
               key={item.year}
               className="rounded-2xl border border-emerald-100 bg-white p-5 shadow-sm"
@@ -182,7 +176,7 @@ export default function AboutPage() {
             high-quality delivery across all programs.
           </p>
           <div className="mt-8 grid gap-5 md:grid-cols-3">
-            {LEADERSHIP.map((person) => (
+            {leader.map((person) => (
               <article
                 key={person.name}
                 className="rounded-2xl border border-emerald-100 bg-slate-50/50 p-5"

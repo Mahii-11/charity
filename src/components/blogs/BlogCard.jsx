@@ -33,7 +33,7 @@ export function BlogCard({ post }) {
 
         {/* Read time */}
         <span className="absolute top-3 right-3 px-3 py-1 rounded-full text-sm bg-black/30 text-white/90">
-          {post.readTime} min read
+          {post.read_time} min read
         </span>
       </div>
 
@@ -61,7 +61,7 @@ export function BlogCard({ post }) {
           {/* Author */}
           <div className="flex items-center gap-2.5">
             <span className="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 font-bold text-sm">
-              {post.authorInitial}
+              {post.author_initial}
             </span>
 
             <span className="text-sm font-medium text-slate-700">

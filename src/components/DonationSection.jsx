@@ -176,13 +176,13 @@ export function DonationSection() {
                 Donate {displayAmount} →
               </motion.button>
 
-              <p className="text-center text-label-sm text-emerald-950/70">
+              <div className="text-center text-label-sm text-emerald-950/70">
                 <div className="flex gap-1.5">
                     <FiLock size={16}/> 
                      Secured & encrypted. Your information is safe with us.
                 </div>
               
-              </p>
+              </div>
             </div>
           </div>
         </Reveal>

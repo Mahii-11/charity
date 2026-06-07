@@ -1,10 +1,42 @@
 import { motion, easeOut } from "framer-motion";
-import { CAUSES } from "../data/data";
 import { progressPct, formatNumber } from "../lib/utils";
 import { fadeUp } from "../lib/animations";
 import { StaggerReveal } from "../components/ui/Reveal";
+import { useEffect, useState } from "react";
+import { getCauses } from "../services/api";
+import CausesSkeleton from "../loaders/CausesSkeleton";
 
 export function Causes() {
+
+  const [causes, setCauses] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+
+  useEffect(() => {
+    const loadCauses = async () => {
+      try {
+        setLoading(true);
+        const data = await getCauses();
+        setCauses(data)
+      } catch (error) {
+        console.error("Error fetching causes:", error);
+      } finally {
+        setLoading(false);
+      } 
+    }
+    loadCauses();
+  }, [])
+
+
+if (loading) {
+  return <CausesSkeleton count={6} />;
+}
+
+
+
+
+
+
   return (
     <section id="causes" className="py-24 bg-slate-50">
       <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10">
@@ -30,7 +62,7 @@ export function Causes() {
           </div>
 
         <StaggerReveal delay={0.1} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {CAUSES.map((cause) => {
+          {causes.map((cause) => {
             const progress = progressPct(cause.raised, cause.goal);
              // const Icon = cause.icon;
             return (
@@ -60,7 +92,7 @@ export function Causes() {
                   <h3 className="font-display font-bold text-body-lg text-slate-900 group-hover:text-emerald-700 transition-colors leading-snug">
                     {cause.title}
                   </h3>
-                  <p className="text-body-xs text-slate-500 leading-relaxed">{cause.desc}</p>
+                  <p className="text-body-xs text-slate-500 leading-relaxed">{cause.description}</p>
 
                   {/* Progress */}
                   <div className="space-y-2 pt-1">

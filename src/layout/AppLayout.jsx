@@ -1,6 +1,7 @@
 import { Outlet } from "react-router";
 import { Navbar } from "../components/Navbar";
 import { Footer } from "../components/Footer";
+import { Toaster } from "react-hot-toast";
 
 
 export default function AppLayout() {
@@ -9,6 +10,7 @@ export default function AppLayout() {
 
         
           <Navbar />
+           <Toaster position="top-center" />
           <main>
             <Outlet />
           </main>
